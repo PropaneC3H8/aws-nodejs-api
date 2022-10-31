@@ -20,35 +20,35 @@ const get: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => 
       id: event.pathParameters.id,
     },
   };
-  //fetch user from the database
-  const result = await dynamoDb.get(params).promise()
-  if(result.Item.streamCount < 3)
-  {
-    try {
-      const updateParams = 
-      {
-        TableName: process.env.DYNAMO_TABLE,
-        Key:
-        { 
-          id: event.pathParameters.id
-        },
-        UpdateExpression: 'set streamCount = streamCount + :val',
-        ExpressionAttributeValues: {
-          ":val": 1
-        },
-        ReturnValues: "UPDATED_NEW"
 
-      }
-      await dynamoDb.update(updateParams).promise()
-    } catch (error) {
-      return error;
-    }
+  const result = await dynamoDb.get(params).promise()
+  console.log(JSON.stringify(result));
+
+  if(result.Item.streamCount <= 3)
+  {
+    const updateParams = 
+    {
+      TableName: process.env.DYNAMO_TABLE,
+      Key: 
+      {
+        id: event.pathParameters.id,
+      },
+      ExpressionAttributeNames: {
+        '#streamCount': 'streamCount',
+      },
+      ExpressionAttributeValues: {
+        ':streamCount': event.body.streamCount + 1,
+      },
+      UpdateExpression: 'SET #streamCount = :streamCount',
+      ReturnValues: 'ALL_NEW',
+    };
+    await dynamoDb.update(updateParams).promise()
     return formatJSONResponse({
-      message: `Hello ${event.headers.Host}, welcome to the exciting Serverless world!`,
+      message: `Happy streaming!`,
       event,
     });
   }
-  
+  return;
 };
 
 export const main = middyfy(get);

@@ -2,12 +2,14 @@ import type { AWS } from '@serverless/typescript';
 
 import hello from '@functions/hello';
 import get from '@functions/get';
+import update from '@functions/update';
 
 const serverlessConfiguration: AWS = {
   service: 'aws-nodejs-api',
   frameworkVersion: '3',
   plugins: ['serverless-esbuild', 'serverless-offline'],
   provider: {
+    lambdaHashingVersion: '20201221',
     name: 'aws',
     runtime: 'nodejs14.x',
     iamRoleStatements: 
@@ -31,7 +33,7 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: { hello, get },
+  functions: { hello, get, update },
   package: { individually: true },
   custom: {
     esbuild: {
