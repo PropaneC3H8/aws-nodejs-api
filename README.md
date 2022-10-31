@@ -22,7 +22,7 @@ Depending on your preferred package manager, follow the instructions below to de
 
 ## Test your service
 
-This template contains a single lambda function triggered by an HTTP request made on the provisioned API Gateway REST API `/hello` route with `POST` method. The request body must be provided as `application/json`. The body structure is tested by API Gateway against `src/functions/hello/schema.ts` JSON-Schema definition: it must contain the `name` property.
+This template contains two lambda functions triggered by an HTTP request made on the provisioned API Gateway REST API `/hello` route with `POST` method, and a `/get/{id}` route with `GET` method. For the `/hello` endpoint, the request body must be provided as `application/json`. The body structure is tested by API Gateway against `src/functions/hello/schema.ts` JSON-Schema definition: it must contain the `name` property. And for the `/get/{id}` endpoint, the `{id}` must be a path parameter that is a number. 
 
 - requesting any other path than `/hello` with any other method than `POST` will result in API Gateway returning a `403` HTTP error code
 - sending a `POST` request to `/hello` with a payload **not** containing a string property named `name` will result in API Gateway returning a `400` HTTP error code
@@ -34,7 +34,8 @@ This template contains a single lambda function triggered by an HTTP request mad
 
 In order to test the hello function locally, run the following command:
 
-- `npx sls invoke local -f hello --path src/functions/hello/mock.json` if you're using NPM
+- `npx sls invoke local -f hello --path src/functions/hello/mock.json` if you're using NPM or,
+- `sls offline start` inside the root directory of the project
 - `yarn sls invoke local -f hello --path src/functions/hello/mock.json` if you're using Yarn
 
 Check the [sls invoke local command documentation](https://www.serverless.com/framework/docs/providers/aws/cli-reference/invoke-local/) for more information.
@@ -69,6 +70,11 @@ The project code base is mainly located within the `src` folder. This folder is 
 │   │   │   ├── index.ts        # `Hello` lambda Serverless configuration
 │   │   │   ├── mock.json       # `Hello` lambda input parameter, if any, for local invocation
 │   │   │   └── schema.ts       # `Hello` lambda input event JSON-Schema
+|   |   ├── get
+│   │   │   ├── handler.ts      # `Get` lambda source code
+│   │   │   ├── index.ts        # `Get` lambda Serverless configuration
+│   │   │   ├── mock.json       # `Get` lambda input parameter, if any, for local invocation
+│   │   │   └── schema.ts       # `Get` lambda input event JSON-Schema    
 │   │   │
 │   │   └── index.ts            # Import/export of all lambda configurations
 │   │
