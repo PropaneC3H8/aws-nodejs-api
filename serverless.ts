@@ -27,7 +27,7 @@ const serverlessConfiguration: AWS = {
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
       DYNAMO_TABLE:'streams',
       AWS_ACCOUNT_ID: '152503629593',
-      AWS_REGION: 'us-east-1',
+      AWS_REGION: 'us-west-1',
     },
   },
   // import the function via paths
